@@ -4,7 +4,7 @@ import (
 	"errors"
 	"testing"
 
-	"gopkg.in/DATA-DOG/go-sqlmock.v1"
+	"github.com/DATA-DOG/go-sqlmock"
 )
 
 func TestNewMySQLChecker(t *testing.T) {
