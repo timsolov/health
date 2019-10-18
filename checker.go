@@ -1,5 +1,9 @@
 package health
 
+import (
+	"sync"
+)
+
 // Checker is a interface used to provide an indication of application health.
 type Checker interface {
 	Check() Health
@@ -53,14 +57,28 @@ func (c CompositeChecker) Check() Health {
 
 	healths := make(map[string]interface{})
 
+	type state struct {
+		h    Health
+		name string
+	}
+	ch := make(chan state, len(c.checkers))
+	var wg sync.WaitGroup
 	for _, item := range c.checkers {
-		h := item.checker.Check()
+		wg.Add(1)
+		item := item
+		go func() {
+			ch <- state{h: item.checker.Check(), name: item.name}
+			wg.Done()
+		}()
+	}
+	wg.Wait()
+	close(ch)
 
-		if !h.IsUp() && !health.IsDown() {
+	for s := range ch {
+		if !s.h.IsUp() && !health.IsDown() {
 			health.Down()
 		}
-
-		healths[item.name] = h
+		healths[s.name] = s.h
 	}
 
 	health.info = healths
@@ -69,6 +87,5 @@ func (c CompositeChecker) Check() Health {
 	for key, value := range c.info {
 		health.AddInfo(key, value)
 	}
-
 	return health
 }
