@@ -2,18 +2,19 @@ package health
 
 import "encoding/json"
 
-type status string
+type Status string
 
 const (
-	up           status = "UP"
-	down                = "DOWN"
-	outOfService        = "OUT OF SERVICE"
-	unknown             = "UNKNOWN"
+	Up           Status = "UP"
+	Down         Status = "DOWN"
+	OutOfService Status = "OUT_OF_SERVICE"
+	NotReady     Status = "NOT_READY"
+	Unknown      Status = "UNKNOWN"
 )
 
 // Health is a health status struct
 type Health struct {
-	status status
+	status Status
 	info   map[string]interface{}
 }
 
@@ -59,44 +60,55 @@ func (h Health) GetInfo(key string) interface{} {
 
 // IsUnknown returns true if Status is Unknown
 func (h Health) IsUnknown() bool {
-	return h.status == unknown
+	return h.status == Unknown
 }
 
 // IsUp returns true if Status is Up
 func (h Health) IsUp() bool {
-	return h.status == up
+	return h.status == Up
 }
 
 // IsDown returns true if Status is Down
 func (h Health) IsDown() bool {
-	return h.status == down
+	return h.status == Down
 }
 
 // IsOutOfService returns true if Status is IsOutOfService
 func (h Health) IsOutOfService() bool {
-	return h.status == outOfService
+	return h.status == OutOfService
+}
+
+// IsNotReady returns true if Status is IsNotReady
+func (h Health) IsNotReady() bool {
+	return h.status == NotReady
 }
 
 // Down set the status to Down
 func (h *Health) Down() *Health {
-	h.status = down
+	h.status = Down
 	return h
 }
 
 // OutOfService set the status to OutOfService
 func (h *Health) OutOfService() *Health {
-	h.status = outOfService
+	h.status = OutOfService
+	return h
+}
+
+// NotReady set the status to NotReady
+func (h *Health) NotReady() *Health {
+	h.status = NotReady
 	return h
 }
 
 // Unknown set the status to Unknown
 func (h *Health) Unknown() *Health {
-	h.status = unknown
+	h.status = Unknown
 	return h
 }
 
 // Up set the status to Up
 func (h *Health) Up() *Health {
-	h.status = up
+	h.status = Up
 	return h
 }

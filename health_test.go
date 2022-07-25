@@ -47,12 +47,21 @@ func Test_Health_OutOfService(t *testing.T) {
 	}
 }
 
+func Test_Health_NotReady(t *testing.T) {
+	h := NewHealth()
+	h.NotReady()
+
+	if !h.IsNotReady() {
+		t.Errorf("NewHealth().IsNotReady() == %t, want %t", h.IsNotReady(), true)
+	}
+}
+
 func Test_Health_IsUp(t *testing.T) {
 	h := NewHealth()
 	h.Up()
 
-	if h.status != up {
-		t.Errorf("NewHealth().status == %s, want %s", h.status, up)
+	if h.status != Up {
+		t.Errorf("NewHealth().status == %s, want %s", h.status, Up)
 	}
 }
 
@@ -60,8 +69,8 @@ func Test_Health_IsDown(t *testing.T) {
 	h := NewHealth()
 	h.Down()
 
-	if h.status != down {
-		t.Errorf("NewHealth().status == %s, want %s", h.status, down)
+	if h.status != Down {
+		t.Errorf("NewHealth().status == %s, want %s", h.status, Down)
 	}
 }
 
@@ -69,8 +78,17 @@ func Test_Health_IsOutOfService(t *testing.T) {
 	h := NewHealth()
 	h.OutOfService()
 
-	if h.status != outOfService {
-		t.Errorf("NewHealth().status == %s, want %s", h.status, outOfService)
+	if h.status != OutOfService {
+		t.Errorf("NewHealth().status == %s, want %s", h.status, OutOfService)
+	}
+}
+
+func Test_Health_IsNotReady(t *testing.T) {
+	h := NewHealth()
+	h.NotReady()
+
+	if h.status != NotReady {
+		t.Errorf("NewHealth().status == %s, want %s", h.status, NotReady)
 	}
 }
 
